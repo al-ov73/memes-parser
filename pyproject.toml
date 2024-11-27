@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "memes-parser"
+version = "0.1.0"
+description = ""
+authors = ["al-ov73 <klever1987@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+python-dotenv = "^1.0.1"
+telethon = "^1.38.1"
+yadisk = "^3.1.0"
+requests = "^2.32.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
