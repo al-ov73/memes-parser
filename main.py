@@ -1,42 +1,27 @@
+from importlib.metadata import files
 
-import os
-import asyncio
-import yadisk
-from datetime import datetime, timedelta
-from dotenv import load_dotenv
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
 
-from telethon import TelegramClient
-from telethon.tl.functions.channels import InviteToChannelRequest
+from src.telegram_parser import parse_telegram_channels
+from src.yadisk_repo import get_links
 
-load_dotenv()
+app = FastAPI()
 
-API_ID = os.getenv("API_ID")
-API_HASH = os.getenv("API_HASH")
-CHANNEL = os.getenv("CHANNEL")
-YA_TOKEN = os.getenv("YA_TOKEN")
-CHANNELS = os.getenv("CHANNELS").split(' ')
+templates = Jinja2Templates(directory="templates")
 
-DOWNLOAD_PATH = 'photos'
 
-os.makedirs(DOWNLOAD_PATH, exist_ok=True)
+@app.get("/", response_class=HTMLResponse)
+async def index_view(request: Request):
+    links = await get_links()
+    context = {
+        "links": links,
+    }
+    return templates.TemplateResponse(request=request, name="index.html", context=context)
 
-async def upload_to_yadisk(filepath):
-    client = yadisk.Client(token=YA_TOKEN)
-    with client:
-        with open(filepath, "rb") as f:
-            client.upload(f, f"memes/temp/{filepath}")
-        
-async def main():
-    async with TelegramClient('session_name', API_ID, API_HASH, system_version='4.16.30-vxCUSTOM') as client:
-        for channel in CHANNELS:
-            messages = await client.get_messages(channel, limit=2)
-            for message in messages:
-                # secs = datetime.now().timestamp() - message.date.timestamp()
-                # hours = round(secs / 60 / 60)
-                if message.photo:
-                    file_path = await client.download_media(message.photo, DOWNLOAD_PATH)
-                    print(file_path)
-                    await upload_to_yadisk(file_path)           
-        
-if __name__ == "__main__":
-    asyncio.run(main())
+
+@app.post("/", response_class=RedirectResponse)
+async def index_view(request: Request):
+    await parse_telegram_channels()
+    return RedirectResponse("/", status_code=302)
