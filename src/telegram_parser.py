@@ -18,7 +18,10 @@ async def parse_telegram_channels() -> int:
     async with TelegramClient('session_name', config.API_ID, config.API_HASH,
                               system_version='4.16.30-vxCUSTOM') as client:
         for channel in config.CHANNELS:
-            messages = await client.get_messages(channel, limit=CHANNEL_FILES_LIMIT)
+            try:
+                messages = await client.get_messages(channel, limit=CHANNEL_FILES_LIMIT)
+            except ValueError:
+                continue
             for message in messages:
                 if message.photo:
                     filename = message.photo.id

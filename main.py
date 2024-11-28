@@ -32,7 +32,7 @@ async def index_view(request: Request):
 async def index_view(request: Request):
     files_added = await parse_telegram_channels()
     print(f"added {files_added} files")
-    return RedirectResponse("/", status_code=302)
+    return RedirectResponse("/temp", status_code=302)
 
 @app.post("/store/{filename}", response_class=RedirectResponse)
 async def index_view(request: Request, filename: str):
