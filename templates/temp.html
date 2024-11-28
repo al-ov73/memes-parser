@@ -20,6 +20,9 @@
 
 <body>
     <div class="container">
+        <form method="post" action="/">
+            <button type="submit" class="btn btn-primary">Получить мемы</button>
+        </form>
         <h1>Галерея</h1>
         <div class="row gallery">
             {% for image in images %}
@@ -40,6 +43,20 @@
                 </div>
                 <div class="modal-body text-center">
                     <img id="modalImage" src="" alt="" class="img-fluid">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <form method="post" id="storeButton" action="">
+                                    <button type="submit" class="btn btn-primary">Добавить</button>
+                                </form>
+                            </div>
+                            <div class="col">
+                                <form>
+                                    <button type="submit" class="btn btn-secondary">Кнопка 2</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,6 +73,8 @@
             const imageName = button.getAttribute('data-image-name')
             const modalImage = document.getElementById('modalImage');
             modalImage.src = imageSrc; // Устанавливаем src изображения в модальном окне
+            const storeButton = document.getElementById('storeButton');
+            storeButton.action = `/store/${imageName}`;
         });
     </script>
 </body>
