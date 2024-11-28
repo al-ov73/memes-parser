@@ -4,6 +4,9 @@ async def add_photo_to_log(filename):
 
 
 async def get_all_ids():
-    with open("log.txt", "r") as file:
-        lines = file.readlines()
+    try:
+        with open("log.txt", "r") as file:
+            lines = file.readlines()
+    except FileNotFoundError:
+        lines = []
     return lines
